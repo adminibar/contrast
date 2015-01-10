@@ -5,33 +5,63 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/dockpit/contrast/assert"
 )
 
 func jsonParsingError(err error) error {
 	return fmt.Errorf("JSON Parsing Error: %s", strings.Replace(err.Error(), "json: ", "", 1))
 }
 
+// A JSON element that provides an interface for
+// comparison against other JSON elements
+type JSONE struct {
+	value interface{}
+}
+
+func NewJSONE(val interface{}) *JSONE {
+	return &JSONE{val}
+}
+
+// Convert example value to string and ask the assert
+// package to use it to generate a assertion function
+func (example *JSONE) ToAssert() (AssertToFunc, error) {
+
+	fn, err := assert.Parse(example)
+	if err != nil {
+		return func(E) error { return err }, err
+	}
+
+	return func(actual E) error {
+		return fn(example.Value(), actual.Value())
+	}, nil
+}
+
+func (e *JSONE) Value() interface{} {
+	return e.value
+}
+
 // A table of values that are mapped
 // using json paths (e.g 0.name.full_name)
 type JSONT struct {
-	values map[string]interface{}
+	values map[string]E
 }
 
 func newJSONT() *JSONT {
 	return &JSONT{
-		values: map[string]interface{}{},
+		values: map[string]E{},
 	}
 }
 
-func (t *JSONT) All() map[string]interface{} {
+func (t *JSONT) All() map[string]E {
 	return t.values
 }
 
-func (t *JSONT) Set(key string, val interface{}) {
-	t.values[key] = val
+func (t *JSONT) Set(key string, e E) {
+	t.values[key] = e
 }
 
-func (t *JSONT) Get(key string) interface{} {
+func (t *JSONT) Get(key string) E {
 	return t.values[key]
 }
 
@@ -42,12 +72,18 @@ func (t *JSONT) AtLeast(ex T) error {
 	for path, example := range ex.All() {
 		actual := t.Get(path)
 
-		//
-		//@todo, add more advanced assertion options
-		//
+		if actual == nil {
+			return fmt.Errorf("doesnt exist %s", path)
+		}
 
-		if actual != example {
-			return fmt.Errorf("%s != %s", actual, example)
+		assert, err := example.ToAssert()
+		if err != nil {
+			return err
+		}
+
+		err = assert(actual)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -67,7 +103,7 @@ func (p *JSON) walk(e interface{}, t *JSONT, path string) error {
 
 	//skip root
 	if path != "" {
-		t.Set(path, e)
+		t.Set(path, NewJSONE(e))
 	}
 
 	switch et := e.(type) {

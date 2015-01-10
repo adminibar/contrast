@@ -20,7 +20,7 @@ func TestJSONObjectParsing(t *testing.T) {
 
 	ta, err := p.Parse(odata)
 	assert.NoError(t, err)
-	assert.Equal(t, 2, ta.Get(".things.0.a.1"))
+	assert.Equal(t, 2, ta.Get(".things.0.a.1").Value())
 }
 
 func TestJSONListParsing(t *testing.T) {
@@ -30,8 +30,8 @@ func TestJSONListParsing(t *testing.T) {
 	ta, err := p.Parse(ldata)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "bar", ta.Get(".0.foo"))
-	assert.Equal(t, 2, ta.Get(".0.things.0.a.1"))
+	assert.Equal(t, "bar", ta.Get(".0.foo").Value())
+	assert.Equal(t, 2, ta.Get(".0.things.0.a.1").Value())
 }
 
 func TestAtLeast_Equal(t *testing.T) {
