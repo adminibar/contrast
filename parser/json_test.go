@@ -34,7 +34,7 @@ func TestJSONListParsing(t *testing.T) {
 	assert.Equal(t, 2, ta.Get(".0.things.0.a.1").Value())
 }
 
-func TestAtLeast_Equal(t *testing.T) {
+func TestJSONAtLeast_Equal(t *testing.T) {
 	p := parser.NewJSON()
 
 	//when eqaul
@@ -45,7 +45,7 @@ func TestAtLeast_Equal(t *testing.T) {
 	assert.NoError(t, t1.AtLeast(t2))
 }
 
-func TestAtLeast_Less(t *testing.T) {
+func TestJSONAtLeast_Less(t *testing.T) {
 	p := parser.NewJSON()
 
 	//when eqaul
@@ -56,7 +56,7 @@ func TestAtLeast_Less(t *testing.T) {
 	assert.NoError(t, t1.AtLeast(t2))
 }
 
-func TestAtLeast_More(t *testing.T) {
+func TestJSONAtLeast_More(t *testing.T) {
 	p := parser.NewJSON()
 
 	//when eqaul

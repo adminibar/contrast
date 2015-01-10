@@ -3,36 +3,7 @@ package parser
 import (
 	"strings"
 	"unicode"
-
-	"github.com/dockpit/contrast/assert"
 )
-
-// A plain text element
-type PlainE struct {
-	value interface{}
-}
-
-func NewPlainE(val interface{}) *PlainE {
-	return &PlainE{val}
-}
-
-// Convert example value to string and ask the assert
-// package to use it to generate a assertion function
-func (example *PlainE) ToAssert() (AssertToFunc, error) {
-
-	fn, err := assert.Parse(example)
-	if err != nil {
-		return func(E) error { return err }, err
-	}
-
-	return func(actual E) error {
-		return fn(example.Value(), actual.Value())
-	}, nil
-}
-
-func (e *PlainE) Value() interface{} {
-	return e.value
-}
 
 // A table that should only contain the
 // single plain text value
@@ -60,11 +31,19 @@ func (t *PlainT) Get(key string) E {
 
 func (t *PlainT) AtLeast(ex T) error {
 
-	return nil
+	//the tables only value into an assert
+	actual := t.Get(".0")
+	fn, err := actual.ToAssert()
+	if err != nil {
+		return err
+	}
+
+	return fn(ex.Get(".0"))
 }
 
 // For parsing byte arrays that just hold
 // plain text but will ignore trailing whitespace
+// as defined by unicode
 type Plain struct{}
 
 func NewPlain() *Plain {
@@ -78,7 +57,7 @@ func (p *Plain) Parse(data []byte) (T, error) {
 	str := strings.TrimRightFunc(string(data), unicode.IsSpace)
 
 	//creat element
-	e := NewPlainE(str)
+	e := NewElement(str)
 
 	//set it as single table value
 	t.Set(".0", e)

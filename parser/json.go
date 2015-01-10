@@ -5,40 +5,10 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/dockpit/contrast/assert"
 )
 
 func jsonParsingError(err error) error {
 	return fmt.Errorf("JSON Parsing Error: %s", strings.Replace(err.Error(), "json: ", "", 1))
-}
-
-// A JSON element that provides an interface for
-// comparison against other JSON elements
-type JSONE struct {
-	value interface{}
-}
-
-func NewJSONE(val interface{}) *JSONE {
-	return &JSONE{val}
-}
-
-// Convert example value to string and ask the assert
-// package to use it to generate a assertion function
-func (example *JSONE) ToAssert() (AssertToFunc, error) {
-
-	fn, err := assert.Parse(example)
-	if err != nil {
-		return func(E) error { return err }, err
-	}
-
-	return func(actual E) error {
-		return fn(example.Value(), actual.Value())
-	}, nil
-}
-
-func (e *JSONE) Value() interface{} {
-	return e.value
 }
 
 // A table of values that are mapped
@@ -101,7 +71,7 @@ func (p *JSON) walk(e interface{}, t *JSONT, path string) error {
 
 	//skip root
 	if path != "" {
-		t.Set(path, NewJSONE(e))
+		t.Set(path, NewElement(e))
 	}
 
 	switch et := e.(type) {
