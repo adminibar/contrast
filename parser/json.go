@@ -65,8 +65,6 @@ func (t *JSONT) Get(key string) E {
 	return t.values[key]
 }
 
-// Asserts wether this table has at least the
-// content of the other (example) table
 func (t *JSONT) AtLeast(ex T) error {
 
 	for path, example := range ex.All() {
