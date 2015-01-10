@@ -23,6 +23,10 @@ func newJSONT() *JSONT {
 	}
 }
 
+func (t *JSONT) All() map[string]interface{} {
+	return t.values
+}
+
 func (t *JSONT) Set(key string, val interface{}) {
 	t.values[key] = val
 }
@@ -32,9 +36,22 @@ func (t *JSONT) Get(key string) interface{} {
 }
 
 // Asserts wether this table has at least the
-// content of the other table
-func (t *JSONT) AtLeast(t2 T) error {
-	return fmt.Errorf("Not yet implemented")
+// content of the other (example) table
+func (t *JSONT) AtLeast(ex T) error {
+
+	for path, example := range ex.All() {
+		actual := t.Get(path)
+
+		//
+		//@todo, add more advanced assertion options
+		//
+
+		if actual != example {
+			return fmt.Errorf("%s != %s", actual, example)
+		}
+	}
+
+	return nil
 }
 
 // For parsing byte arrays that are known to be
