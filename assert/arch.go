@@ -15,6 +15,8 @@ type Archetype struct {
 }
 
 //returns whether a given example value fit the defined archetype
+//@todo this is quite fragicle since a.Value and val can be of similar
+//but unequal types: float64(42) int64(42) will not match
 func (a *Archetype) Fits(val interface{}) bool {
 	return a.Value == val
 }

@@ -17,13 +17,14 @@ var AvailableStrategies = map[string]Strategy{
 //will be asserted, (e.g. strict equal, type only)
 func Parse(example interface{}, ats []*Archetype) (AssertFunc, error) {
 	var err error
-
 	//ask each arhectype if the example value fits
 	//if it deos the archetype defines the assertion
 	//strategy
 	strat := StrictEqualStrategy
 	for _, at := range ats {
+
 		if at.Fits(example) {
+
 			strat, err = at.ToStrategy()
 			if err != nil {
 				return nil, err

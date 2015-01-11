@@ -31,3 +31,13 @@ func TestAssert_BasicJSON_Fail(t *testing.T) {
 	err := contrast.Assert([]byte(`{"foo": "bar"}`), []byte(`{"foo": "rab"}`), p)
 	tassert.Error(t, err)
 }
+
+func TestAssert_NestedAchetypeJSON_Pass(t *testing.T) {
+	ats := []*assert.Archetype{
+		&assert.Archetype{float64(42), ""},
+	}
+
+	p := parser.NewJSON(ats)
+	err := contrast.Assert([]byte(`{"foo": 42}`), []byte(`{"foo": 1}`), p)
+	tassert.NoError(t, err)
+}

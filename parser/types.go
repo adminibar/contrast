@@ -43,7 +43,7 @@ func NewElement(val interface{}) *Element {
 // package to use it to generate a assertion function
 func (example *Element) ToAssert(ats []*assert.Archetype) (AssertToFunc, error) {
 
-	fn, err := assert.Parse(example, ats)
+	fn, err := assert.Parse(example.Value(), ats)
 	if err != nil {
 		return func(E) error { return err }, err
 	}

@@ -44,7 +44,6 @@ func (t *JSONT) Get(key string) E {
 }
 
 func (t *JSONT) Equals(ex T) error {
-	ats := []*assert.Archetype{}
 
 	//does this table has all the paths of
 	//the example
@@ -54,7 +53,7 @@ func (t *JSONT) Equals(ex T) error {
 			return fmt.Errorf("Missing Value at path '%s' that example does have", path)
 		}
 
-		assert, err := example.ToAssert(ats)
+		assert, err := example.ToAssert(t.archetypes)
 		if err != nil {
 			return err
 		}
