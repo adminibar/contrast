@@ -1,6 +1,8 @@
 package assert
 
 import (
+	"fmt"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,10 +26,9 @@ func Parse(example interface{}, ats []*Archetype) (AssertFunc, error) {
 	for _, at := range ats {
 
 		if at.Fits(example) {
-
 			strat, err = at.ToStrategy()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("Error formulating strategy: %s", err)
 			}
 
 			break

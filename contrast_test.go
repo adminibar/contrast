@@ -23,14 +23,12 @@ func TestContentTypeToParser(t *testing.T) {
 }
 
 func TestAssert_BasicJSON_Pass(t *testing.T) {
-	ats := []*assert.Archetype{}
 	p := parser.NewJSON(ats)
 	err := contrast.Assert([]byte(`{"foo": "bar"}`), []byte(`{"foo": "bar"}`), p)
 	tassert.NoError(t, err)
 }
 
 func TestAssert_BasicJSON_Fail(t *testing.T) {
-	ats := []*assert.Archetype{}
 	p := parser.NewJSON(ats)
 	err := contrast.Assert([]byte(`{"foo": "bar"}`), []byte(`{"foo": "rab"}`), p)
 	tassert.Error(t, err)
@@ -52,4 +50,16 @@ func TestAssert_NestedAchetypeJSON_Fail(t *testing.T) {
 	p := parser.NewJSON(ats)
 	err := contrast.Assert([]byte(`{"foo": {"bar": [43]}}`), []byte(`{"foo": {"bar": [1]}}`), p)
 	tassert.Error(t, err)
+}
+
+func TestAssert_Plain_Fail(t *testing.T) {
+	p := parser.NewPlain(ats)
+	err := contrast.Assert([]byte(`abcd`), []byte(`abcde`), p)
+	tassert.Error(t, err)
+}
+
+func TestAssert_Plain_Success(t *testing.T) {
+	p := parser.NewPlain(ats)
+	err := contrast.Assert([]byte("abcd \n\t"), []byte("abcd "), p)
+	tassert.NoError(t, err)
 }

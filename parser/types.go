@@ -20,7 +20,8 @@ type T interface {
 	All() map[string]E
 	Set(string, E)
 	Get(string) E
-	Equals(T) error
+
+	Follows(T) error
 }
 
 // Parsers turn bytes into

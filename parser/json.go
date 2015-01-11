@@ -43,7 +43,7 @@ func (t *JSONT) Get(key string) E {
 	return t.values[key]
 }
 
-func (t *JSONT) Equals(ex T) error {
+func (t *JSONT) Follows(ex T) error {
 
 	//@todo, order ex.All() for consistent errors
 

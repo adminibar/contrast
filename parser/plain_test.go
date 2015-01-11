@@ -26,9 +26,9 @@ func TestPlainAtLeast_Equal(t *testing.T) {
 	p := parser.NewPlain(nil)
 
 	//when eqaul
-	t1, err := p.Parse([]byte("foobar\t\n"))
-	t2, err := p.Parse([]byte(`foobar`))
+	actual, err := p.Parse([]byte("foobar\t\n"))
+	example, err := p.Parse([]byte(`foobar`))
 
 	assert.NoError(t, err)
-	assert.NoError(t, t1.Equals(t2))
+	assert.NoError(t, actual.Follows(example))
 }

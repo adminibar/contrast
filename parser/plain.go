@@ -37,16 +37,18 @@ func (t *PlainT) Get(key string) E {
 	return t.values[key]
 }
 
-func (t *PlainT) Equals(ex T) error {
+func (t *PlainT) Follows(ex T) error {
 
 	//the tables only value into an assert
 	actual := t.Get(".0")
-	fn, err := actual.ToAssert(t.archetypes)
+	example := ex.Get(".0")
+
+	afn, err := example.ToAssert(t.archetypes)
 	if err != nil {
 		return err
 	}
 
-	return fn(ex.Get(".0"))
+	return afn(actual)
 }
 
 // For parsing byte arrays that just hold

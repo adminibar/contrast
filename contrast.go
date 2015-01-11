@@ -20,17 +20,17 @@ func Parser(mime string, ats []*assert.Archetype) parser.P {
 
 //Assert the given data against the example bytes using
 //the content type specific parser
-func Assert(ex, data []byte, p parser.P) error {
+func Assert(ex, act []byte, p parser.P) error {
 
 	example, err := p.Parse(ex)
 	if err != nil {
 		return err
 	}
 
-	actual, err := p.Parse(data)
+	actual, err := p.Parse(act)
 	if err != nil {
 		return err
 	}
 
-	return actual.Equals(example)
+	return actual.Follows(example)
 }
