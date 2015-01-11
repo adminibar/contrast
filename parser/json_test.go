@@ -16,18 +16,18 @@ var bdata = []byte(`{"foo": "bar", "lorum": "ipsum"}`)
 
 func TestJSONObjectParsing(t *testing.T) {
 
-	p := parser.NewJSON()
+	p := parser.NewJSON(nil)
 
-	ta, err := p.Parse(odata, nil)
+	ta, err := p.Parse(odata)
 	assert.NoError(t, err)
 	assert.Equal(t, 2, ta.Get(".things.0.a.1").Value())
 }
 
 func TestJSONListParsing(t *testing.T) {
 
-	p := parser.NewJSON()
+	p := parser.NewJSON(nil)
 
-	ta, err := p.Parse(ldata, nil)
+	ta, err := p.Parse(ldata)
 	assert.NoError(t, err)
 
 	assert.Equal(t, "bar", ta.Get(".0.foo").Value())
@@ -35,33 +35,33 @@ func TestJSONListParsing(t *testing.T) {
 }
 
 func TestJSONAtLeast_Equal(t *testing.T) {
-	p := parser.NewJSON()
+	p := parser.NewJSON(nil)
 
 	//when eqaul
-	t1, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`), nil)
-	t2, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`), nil)
+	t1, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`))
+	t2, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`))
 
 	assert.NoError(t, err)
 	assert.NoError(t, t1.Equals(t2))
 }
 
 func TestJSONAtLeast_Less(t *testing.T) {
-	p := parser.NewJSON()
+	p := parser.NewJSON(nil)
 
 	//when eqaul
-	t1, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`), nil)
-	t2, err := p.Parse([]byte(`{"foo": "bar"}`), nil)
+	t1, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`))
+	t2, err := p.Parse([]byte(`{"foo": "bar"}`))
 
 	assert.NoError(t, err)
 	assert.Error(t, t1.Equals(t2))
 }
 
 func TestJSONAtLeast_More(t *testing.T) {
-	p := parser.NewJSON()
+	p := parser.NewJSON(nil)
 
 	//when eqaul
-	t1, err := p.Parse([]byte(`{"foo": "bar"}`), nil)
-	t2, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`), nil)
+	t1, err := p.Parse([]byte(`{"foo": "bar"}`))
+	t2, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`))
 
 	assert.NoError(t, err)
 	assert.Error(t, t1.Equals(t2))

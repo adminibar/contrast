@@ -14,20 +14,20 @@ var plain_adata = []byte("some text with trailing whitespace \n\t")
 var plain_bdata = []byte("some text with trailing  \n\t")
 
 func TestPlainParsing(t *testing.T) {
-	p := parser.NewPlain()
+	p := parser.NewPlain(nil)
 
-	table, err := p.Parse(plain_data, nil)
+	table, err := p.Parse(plain_data)
 
 	assert.NoError(t, err)
 	assert.Equal(t, "some text with trailing whitespace", table.Get(".0").Value())
 }
 
 func TestPlainAtLeast_Equal(t *testing.T) {
-	p := parser.NewPlain()
+	p := parser.NewPlain(nil)
 
 	//when eqaul
-	t1, err := p.Parse([]byte("foobar\t\n"), nil)
-	t2, err := p.Parse([]byte(`foobar`), nil)
+	t1, err := p.Parse([]byte("foobar\t\n"))
+	t2, err := p.Parse([]byte(`foobar`))
 
 	assert.NoError(t, err)
 	assert.NoError(t, t1.Equals(t2))

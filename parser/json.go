@@ -78,10 +78,12 @@ func (t *JSONT) Equals(ex T) error {
 
 // For parsing byte arrays that are known to be
 // JSON encoded
-type JSON struct{}
+type JSON struct {
+	archetypes []*assert.Archetype
+}
 
-func NewJSON() *JSON {
-	return &JSON{}
+func NewJSON(ats []*assert.Archetype) *JSON {
+	return &JSON{ats}
 }
 
 func (p *JSON) walk(e interface{}, t *JSONT, path string) error {
@@ -119,8 +121,7 @@ func (p *JSON) walk(e interface{}, t *JSONT, path string) error {
 	return nil
 }
 
-//if ats is nill, an empty list of archetypes is used
-func (p *JSON) Parse(data []byte, ats []*assert.Archetype) (T, error) {
+func (p *JSON) Parse(data []byte) (T, error) {
 	l := []map[string]interface{}{}
 	o := map[string]interface{}{}
 	err := json.Unmarshal(data, &l)
@@ -139,7 +140,7 @@ func (p *JSON) Parse(data []byte, ats []*assert.Archetype) (T, error) {
 	}
 
 	//walk either the list or the object
-	t := newJSONT(ats)
+	t := newJSONT(p.archetypes)
 	if len(l) > 0 {
 		err = p.walk(l, t, "")
 	} else {

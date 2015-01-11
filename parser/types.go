@@ -26,7 +26,7 @@ type T interface {
 // Parsers turn bytes into
 // a linear Table of comparable elements
 type P interface {
-	Parse([]byte, []*assert.Archetype) (T, error)
+	Parse([]byte) (T, error)
 }
 
 // Element represents a value in a table

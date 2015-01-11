@@ -52,15 +52,17 @@ func (t *PlainT) Equals(ex T) error {
 // For parsing byte arrays that just hold
 // plain text but will ignore trailing whitespace
 // as defined by unicode
-type Plain struct{}
+type Plain struct {
+	archetypes []*assert.Archetype
+}
 
-func NewPlain() *Plain {
-	return &Plain{}
+func NewPlain(ats []*assert.Archetype) *Plain {
+	return &Plain{ats}
 }
 
 //if ats is nill, an empty list of archetypes is used
-func (p *Plain) Parse(data []byte, ats []*assert.Archetype) (T, error) {
-	t := newPlainT(ats)
+func (p *Plain) Parse(data []byte) (T, error) {
+	t := newPlainT(p.archetypes)
 
 	//convert to string and remove spaces according to unicode
 	str := strings.TrimRightFunc(string(data), unicode.IsSpace)

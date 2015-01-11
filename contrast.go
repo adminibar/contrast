@@ -1,6 +1,7 @@
 package contrast
 
 import (
+	// "github.com/dockpit/contrast/assert"
 	"github.com/dockpit/contrast/parser"
 )
 
