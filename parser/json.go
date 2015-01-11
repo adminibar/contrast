@@ -45,12 +45,20 @@ func (t *JSONT) Get(key string) E {
 
 func (t *JSONT) Equals(ex T) error {
 
+	//@todo, order ex.All() for consistent errors
+
 	//does this table has all the paths of
 	//the example
 	for path, example := range ex.All() {
 		actual := t.Get(path)
 		if actual == nil {
 			return fmt.Errorf("Missing Value at path '%s' that example does have", path)
+		}
+
+		//object/lists don't have to be checked, individual elements existence is ok
+		switch actual.Value().(type) {
+		case []interface{}, []map[string]interface{}, map[string]interface{}:
+			continue
 		}
 
 		assert, err := example.ToAssert(t.archetypes)

@@ -10,6 +10,10 @@ import (
 	"github.com/dockpit/contrast/parser"
 )
 
+var ats = []*assert.Archetype{
+	&assert.Archetype{float64(42), ""},
+}
+
 func TestContentTypeToParser(t *testing.T) {
 	p := contrast.Parser("application/json", nil)
 	tassert.IsType(t, &parser.JSON{}, p)
@@ -32,12 +36,20 @@ func TestAssert_BasicJSON_Fail(t *testing.T) {
 	tassert.Error(t, err)
 }
 
-func TestAssert_NestedAchetypeJSON_Pass(t *testing.T) {
-	ats := []*assert.Archetype{
-		&assert.Archetype{float64(42), ""},
-	}
-
+func TestAssert_AchetypeJSON_Pass(t *testing.T) {
 	p := parser.NewJSON(ats)
 	err := contrast.Assert([]byte(`{"foo": 42}`), []byte(`{"foo": 1}`), p)
 	tassert.NoError(t, err)
+}
+
+func TestAssert_NestedAchetypeJSON_Pass(t *testing.T) {
+	p := parser.NewJSON(ats)
+	err := contrast.Assert([]byte(`{"foo": {"bar": [42]}}`), []byte(`{"foo": {"bar": [1]}}`), p)
+	tassert.NoError(t, err)
+}
+
+func TestAssert_NestedAchetypeJSON_Fail(t *testing.T) {
+	p := parser.NewJSON(ats)
+	err := contrast.Assert([]byte(`{"foo": {"bar": [43]}}`), []byte(`{"foo": {"bar": [1]}}`), p)
+	tassert.Error(t, err)
 }
