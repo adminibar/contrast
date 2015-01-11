@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/dockpit/contrast/assert"
 )
 
 func jsonParsingError(err error) error {
@@ -14,12 +16,18 @@ func jsonParsingError(err error) error {
 // A table of values that are mapped
 // using json paths (e.g 0.name.full_name)
 type JSONT struct {
-	values map[string]E
+	values     map[string]E
+	archetypes []*assert.Archetype
 }
 
-func newJSONT() *JSONT {
+func newJSONT(ats []*assert.Archetype) *JSONT {
+	if ats == nil {
+		ats = []*assert.Archetype{}
+	}
+
 	return &JSONT{
-		values: map[string]E{},
+		values:     map[string]E{},
+		archetypes: ats,
 	}
 }
 
@@ -36,6 +44,7 @@ func (t *JSONT) Get(key string) E {
 }
 
 func (t *JSONT) AtLeast(ex T) error {
+	ats := []*assert.Archetype{}
 
 	for path, example := range ex.All() {
 		actual := t.Get(path)
@@ -44,7 +53,7 @@ func (t *JSONT) AtLeast(ex T) error {
 			return fmt.Errorf("doesnt exist %s", path)
 		}
 
-		assert, err := example.ToAssert()
+		assert, err := example.ToAssert(ats)
 		if err != nil {
 			return err
 		}
@@ -101,7 +110,8 @@ func (p *JSON) walk(e interface{}, t *JSONT, path string) error {
 	return nil
 }
 
-func (p *JSON) Parse(data []byte) (T, error) {
+//if ats is nill, an empty list of archetypes is used
+func (p *JSON) Parse(data []byte, ats []*assert.Archetype) (T, error) {
 	l := []map[string]interface{}{}
 	o := map[string]interface{}{}
 	err := json.Unmarshal(data, &l)
@@ -120,7 +130,7 @@ func (p *JSON) Parse(data []byte) (T, error) {
 	}
 
 	//walk either the list or the object
-	t := newJSONT()
+	t := newJSONT(ats)
 	if len(l) > 0 {
 		err = p.walk(l, t, "")
 	} else {

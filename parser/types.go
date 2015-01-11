@@ -11,7 +11,7 @@ type AssertToFunc func(E) error
 // elements meet the exptation(s)
 type E interface {
 	Value() interface{}
-	ToAssert() (AssertToFunc, error)
+	ToAssert(ats []*assert.Archetype) (AssertToFunc, error)
 }
 
 // Tables are compared against other
@@ -30,7 +30,7 @@ type T interface {
 // Parsers turn bytes into
 // a linear Table of comparable elements
 type P interface {
-	Parse([]byte) (T, error)
+	Parse([]byte, []*assert.Archetype) (T, error)
 }
 
 // Element represents a value in a table
@@ -45,9 +45,9 @@ func NewElement(val interface{}) *Element {
 
 // Convert example value to string and ask the assert
 // package to use it to generate a assertion function
-func (example *Element) ToAssert() (AssertToFunc, error) {
+func (example *Element) ToAssert(ats []*assert.Archetype) (AssertToFunc, error) {
 
-	fn, err := assert.Parse(example)
+	fn, err := assert.Parse(example, ats)
 	if err != nil {
 		return func(E) error { return err }, err
 	}
