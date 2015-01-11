@@ -30,5 +30,5 @@ func TestPlainAtLeast_Equal(t *testing.T) {
 	t2, err := p.Parse([]byte(`foobar`), nil)
 
 	assert.NoError(t, err)
-	assert.NoError(t, t1.AtLeast(t2))
+	assert.NoError(t, t1.Equals(t2))
 }

@@ -20,11 +20,7 @@ type T interface {
 	All() map[string]E
 	Set(string, E)
 	Get(string) E
-
-	//expect this table to have at least the
-	//elements of the other table but its ok
-	//if it has any extra
-	AtLeast(T) error
+	Equals(T) error
 }
 
 // Parsers turn bytes into

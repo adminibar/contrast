@@ -42,7 +42,7 @@ func TestJSONAtLeast_Equal(t *testing.T) {
 	t2, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`), nil)
 
 	assert.NoError(t, err)
-	assert.NoError(t, t1.AtLeast(t2))
+	assert.NoError(t, t1.Equals(t2))
 }
 
 func TestJSONAtLeast_Less(t *testing.T) {
@@ -53,7 +53,7 @@ func TestJSONAtLeast_Less(t *testing.T) {
 	t2, err := p.Parse([]byte(`{"foo": "bar"}`), nil)
 
 	assert.NoError(t, err)
-	assert.NoError(t, t1.AtLeast(t2))
+	assert.Error(t, t1.Equals(t2))
 }
 
 func TestJSONAtLeast_More(t *testing.T) {
@@ -64,5 +64,5 @@ func TestJSONAtLeast_More(t *testing.T) {
 	t2, err := p.Parse([]byte(`{"foo": "bar", "lorum": "ipsum"}`), nil)
 
 	assert.NoError(t, err)
-	assert.Error(t, t1.AtLeast(t2))
+	assert.Error(t, t1.Equals(t2))
 }

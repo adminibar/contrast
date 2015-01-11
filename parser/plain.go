@@ -37,7 +37,7 @@ func (t *PlainT) Get(key string) E {
 	return t.values[key]
 }
 
-func (t *PlainT) AtLeast(ex T) error {
+func (t *PlainT) Equals(ex T) error {
 
 	//the tables only value into an assert
 	actual := t.Get(".0")

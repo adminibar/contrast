@@ -43,14 +43,15 @@ func (t *JSONT) Get(key string) E {
 	return t.values[key]
 }
 
-func (t *JSONT) AtLeast(ex T) error {
+func (t *JSONT) Equals(ex T) error {
 	ats := []*assert.Archetype{}
 
+	//does this table has all the paths of
+	//the example
 	for path, example := range ex.All() {
 		actual := t.Get(path)
-
 		if actual == nil {
-			return fmt.Errorf("doesnt exist %s", path)
+			return fmt.Errorf("Missing Value at path '%s' that example does have", path)
 		}
 
 		assert, err := example.ToAssert(ats)
@@ -61,6 +62,14 @@ func (t *JSONT) AtLeast(ex T) error {
 		err = assert(actual)
 		if err != nil {
 			return err
+		}
+	}
+
+	//does it have any extra paths
+	for path, _ := range t.All() {
+		example := ex.Get(path)
+		if example == nil {
+			return fmt.Errorf("Extra Value at path '%s' that example doesn't have", path)
 		}
 	}
 
