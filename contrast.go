@@ -22,13 +22,15 @@ func Parser(mime string, ats []*assert.Archetype) parser.P {
 //the content type specific parser
 func Assert(ex, data []byte, p parser.P) error {
 
-	// t1 := p.parse(ex)
+	example, err := p.Parse(ex)
+	if err != nil {
+		return err
+	}
 
-	// t2 := p.parse(data)
+	actual, err := p.Parse(data)
+	if err != nil {
+		return err
+	}
 
-	// d := t1.Diff(t2)
-	// c := t1.AtMost(t2)
-	// c := t1.Exact(t2)
-
-	return nil
+	return actual.Equals(example)
 }
