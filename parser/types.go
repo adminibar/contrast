@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/dockpit/contrast/assert"
+	"github.com/dockpit/assert/strategy"
 )
 
 type AssertToFunc func(E) error
@@ -11,7 +11,7 @@ type AssertToFunc func(E) error
 // elements meet the exptation(s)
 type E interface {
 	Value() interface{}
-	ToAssert(ats []*assert.Archetype) (AssertToFunc, error)
+	ToAssert(ats []*strategy.Archetype) (AssertToFunc, error)
 }
 
 // Tables are compared against other
@@ -42,9 +42,9 @@ func NewElement(val interface{}) *Element {
 
 // Convert example value to string and ask the assert
 // package to use it to generate a assertion function
-func (example *Element) ToAssert(ats []*assert.Archetype) (AssertToFunc, error) {
+func (example *Element) ToAssert(ats []*strategy.Archetype) (AssertToFunc, error) {
 
-	fn, err := assert.Parse(example.Value(), ats)
+	fn, err := strategy.Parse(example.Value(), ats)
 	if err != nil {
 		return func(E) error { return err }, err
 	}

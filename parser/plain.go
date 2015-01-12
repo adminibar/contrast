@@ -4,19 +4,19 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/dockpit/contrast/assert"
+	"github.com/dockpit/assert/strategy"
 )
 
 // A table that should only contain the
 // single plain text value
 type PlainT struct {
 	values     map[string]E
-	archetypes []*assert.Archetype
+	archetypes []*strategy.Archetype
 }
 
-func newPlainT(ats []*assert.Archetype) *PlainT {
+func newPlainT(ats []*strategy.Archetype) *PlainT {
 	if ats == nil {
-		ats = []*assert.Archetype{}
+		ats = []*strategy.Archetype{}
 	}
 
 	return &PlainT{
@@ -55,10 +55,10 @@ func (t *PlainT) Follows(ex T) error {
 // plain text but will ignore trailing whitespace
 // as defined by unicode
 type Plain struct {
-	archetypes []*assert.Archetype
+	archetypes []*strategy.Archetype
 }
 
-func NewPlain(ats []*assert.Archetype) *Plain {
+func NewPlain(ats []*strategy.Archetype) *Plain {
 	return &Plain{ats}
 }
 

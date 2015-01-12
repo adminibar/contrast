@@ -1,15 +1,15 @@
-package contrast
+package assert
 
 import (
-	"github.com/dockpit/contrast/assert"
-	"github.com/dockpit/contrast/parser"
+	"github.com/dockpit/assert/parser"
+	"github.com/dockpit/assert/strategy"
 )
 
 var DefaultParserMIME = "plain/text"
 
 //Return a parser that is appropriate for the given mime type, if
 //non is found return parser for DefaultParserMIME
-func Parser(mime string, ats []*assert.Archetype) parser.P {
+func Parser(mime string, ats []*strategy.Archetype) parser.P {
 	switch mime {
 	case "application/json":
 		return parser.NewJSON(ats)
@@ -18,9 +18,9 @@ func Parser(mime string, ats []*assert.Archetype) parser.P {
 	return parser.NewPlain(ats)
 }
 
-//Assert the given data against the example bytes using
-//the content type specific parser
-func Assert(ex, act []byte, p parser.P) error {
+//Assert whether the given data flollows the example bytes
+//using the given parser
+func Follows(ex, act []byte, p parser.P) error {
 
 	example, err := p.Parse(ex)
 	if err != nil {

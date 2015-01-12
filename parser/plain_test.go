@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dockpit/contrast/parser"
+	"github.com/dockpit/assert/parser"
 )
 
 var plain_data = []byte("some text with trailing whitespace \n\t")

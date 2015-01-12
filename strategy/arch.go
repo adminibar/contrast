@@ -1,4 +1,4 @@
-package assert
+package strategy
 
 import (
 	"encoding/json"

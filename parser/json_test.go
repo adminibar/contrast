@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dockpit/contrast/parser"
+	"github.com/dockpit/assert/parser"
 )
 
 var odata = []byte(`{"foo": "bar", "things": [{"a": [1,2,4]}, {"key": "value"}]}`)

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dockpit/contrast/assert"
+	"github.com/dockpit/assert/strategy"
 )
 
 func jsonParsingError(err error) error {
@@ -17,12 +17,12 @@ func jsonParsingError(err error) error {
 // using json paths (e.g 0.name.full_name)
 type JSONT struct {
 	values     map[string]E
-	archetypes []*assert.Archetype
+	archetypes []*strategy.Archetype
 }
 
-func newJSONT(ats []*assert.Archetype) *JSONT {
+func newJSONT(ats []*strategy.Archetype) *JSONT {
 	if ats == nil {
-		ats = []*assert.Archetype{}
+		ats = []*strategy.Archetype{}
 	}
 
 	return &JSONT{
@@ -86,10 +86,10 @@ func (t *JSONT) Follows(ex T) error {
 // For parsing byte arrays that are known to be
 // JSON encoded
 type JSON struct {
-	archetypes []*assert.Archetype
+	archetypes []*strategy.Archetype
 }
 
-func NewJSON(ats []*assert.Archetype) *JSON {
+func NewJSON(ats []*strategy.Archetype) *JSON {
 	return &JSON{ats}
 }
 
